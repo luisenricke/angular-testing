@@ -1,6 +1,6 @@
 import { Calculator } from './calculator';
 
-describe('Test for Calculator', () => {
+fdescribe('Test for Calculator', () => {
   it('#multiply should return a nine', () => {
     // Arrange
     const calculator = new Calculator();
@@ -25,6 +25,13 @@ describe('Test for Calculator', () => {
     // Act & Assert
     expect(calculator.divide(6, 3)).toEqual(2);
     expect(calculator.divide(10, 2)).toEqual(5);
+  });
+
+  it('#divide with zero', () => {
+    // Arrange
+    const calculator = new Calculator();
+    // Act & Assert
+    expect(calculator.divide(2, 0)).toBeNull();
   });
 
   it('test matchers', () => {
