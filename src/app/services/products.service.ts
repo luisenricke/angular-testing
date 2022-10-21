@@ -31,7 +31,7 @@ export class ProductsService {
     let params = new HttpParams();
     if (limit && offset) {
       params = params.set('limit', limit);
-      params = params.set('offset', limit);
+      params = params.set('offset', offset);
     }
     return this.http.get<Product[]>(this.apiUrl, { params }).pipe(
       retry(3),
@@ -39,7 +39,7 @@ export class ProductsService {
         products.map((item) => {
           return {
             ...item,
-            taxes: 0.19 * item.price,
+            taxes: item.price > 0 ? 0.19 * item.price : 0,
           };
         })
       )

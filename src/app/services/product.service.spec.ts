@@ -78,6 +78,14 @@ describe('ProductService', () => {
           ...generateOneProduct(),
           price: 200, // 200 * .19 = 38
         },
+        {
+          ...generateOneProduct(),
+          price: 0, // 0 * .19 = 0
+        },
+        {
+          ...generateOneProduct(),
+          price: -10, // -10 * .19 = 0
+        },
       ];
       // act
       productsService.getAll().subscribe((data: Product[]) => {
@@ -85,6 +93,8 @@ describe('ProductService', () => {
         expect(data.length).toEqual(mock.length);
         expect(data[0].taxes).toEqual(19);
         expect(data[1].taxes).toEqual(38);
+        expect(data[2].taxes).toEqual(0);
+        expect(data[3].taxes).toEqual(0);
         doneFn();
       });
 
@@ -92,6 +102,70 @@ describe('ProductService', () => {
       const url = `${environment.API_URL}/api/v1/products`;
       const request = httpController.expectOne(url);
       request.flush(mock);
+      httpController.verify();
+    });
+
+    it('should send query params with limit 10 and offset 3', (doneFn) => {
+      // arrange
+      const mock: Product[] = generateManyProducts(3);
+      const limit = 10;
+      const offset = 3;
+      // act
+      productsService.getAll(limit, offset).subscribe((data: Product[]) => {
+        // assert
+        expect(data.length).toEqual(mock.length);
+        doneFn();
+      });
+
+      // http config
+      const url = `${environment.API_URL}/api/v1/products?limit=${limit}&offset=${offset}`;
+      const request = httpController.expectOne(url);
+      request.flush(mock);
+      const params = request.request.params;
+      expect(params.get('limit')).toEqual(limit.toString());
+      expect(params.get('offset')).toEqual(offset.toString());
+      httpController.verify();
+    });
+
+    it('should send query params with limit and not send any query param', (doneFn) => {
+      // arrange
+      const mock: Product[] = generateManyProducts(3);
+      const limit = 10;
+      // act
+      productsService.getAll(limit).subscribe((data: Product[]) => {
+        // assert
+        expect(data.length).toEqual(mock.length);
+        doneFn();
+      });
+
+      // http config
+      const url = `${environment.API_URL}/api/v1/products`;
+      const request = httpController.expectOne(url);
+      request.flush(mock);
+      const params = request.request.params;
+      expect(params.get('limit')).toBeNull();
+      expect(params.get('offset')).toBeNull();
+      httpController.verify();
+    });
+
+    it('should send query params with offset and not send any query param', (doneFn) => {
+      // arrange
+      const mock: Product[] = generateManyProducts(3);
+      const offset = 3;
+      // act
+      productsService.getAll(undefined, offset).subscribe((data: Product[]) => {
+        // assert
+        expect(data.length).toEqual(mock.length);
+        doneFn();
+      });
+
+      // http config
+      const url = `${environment.API_URL}/api/v1/products`;
+      const request = httpController.expectOne(url);
+      request.flush(mock);
+      const params = request.request.params;
+      expect(params.get('limit')).toBeNull();
+      expect(params.get('offset')).toBeNull();
       httpController.verify();
     });
   });
