@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 
 import { Product } from '../models/product.model';
 import { ProductsService } from './products.service';
+import { generateManyProducts } from '../models/product.mock';
 
 describe('ProductService', () => {
   let productsService: ProductsService;
@@ -28,19 +29,7 @@ describe('ProductService', () => {
   describe('Test for getAllSimple', () => {
     it('should return a product list', (doneFn) => {
       // arrange
-      const mock: Product[] = [
-        {
-          id: '1',
-          title: 'test',
-          price: 100,
-          description: 'test',
-          category: {
-            id: 2,
-            name: 'category-test',
-          },
-          images: ['img', 'img'],
-        },
-      ];
+      const mock: Product[] = generateManyProducts(2);
       // act
       productsService.getAllSimple().subscribe((data: Product[]) => {
         // assert
