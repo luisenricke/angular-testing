@@ -3,14 +3,14 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { environment } from '../../environments/environment';
 
-import { Product } from '../models/product.model';
-import { ProductsService } from './products.service';
+import { environment } from '../../environments/environment';
 import {
   generateManyProducts,
   generateOneProduct,
 } from '../models/product.mock';
+import { CreateProductDTO, Product } from '../models/product.model';
+import { ProductsService } from './products.service';
 
 describe('ProductService', () => {
   let productsService: ProductsService;
@@ -23,6 +23,10 @@ describe('ProductService', () => {
     });
     productsService = TestBed.inject(ProductsService);
     httpController = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpController.verify();
   });
 
   it('should created', () => {
@@ -45,7 +49,6 @@ describe('ProductService', () => {
       const url = `${environment.API_URL}/api/v1/products`;
       const request = httpController.expectOne(url);
       request.flush(mock);
-      httpController.verify();
     });
   });
 
@@ -64,7 +67,6 @@ describe('ProductService', () => {
       const url = `${environment.API_URL}/api/v1/products`;
       const request = httpController.expectOne(url);
       request.flush(mock);
-      httpController.verify();
     });
 
     it('should return a product list with taxes', (doneFn) => {
@@ -102,7 +104,6 @@ describe('ProductService', () => {
       const url = `${environment.API_URL}/api/v1/products`;
       const request = httpController.expectOne(url);
       request.flush(mock);
-      httpController.verify();
     });
 
     it('should send query params with limit 10 and offset 3', (doneFn) => {
@@ -124,7 +125,6 @@ describe('ProductService', () => {
       const params = request.request.params;
       expect(params.get('limit')).toEqual(limit.toString());
       expect(params.get('offset')).toEqual(offset.toString());
-      httpController.verify();
     });
 
     it('should send query params with limit and not send any query param', (doneFn) => {
@@ -145,7 +145,6 @@ describe('ProductService', () => {
       const params = request.request.params;
       expect(params.get('limit')).toBeNull();
       expect(params.get('offset')).toBeNull();
-      httpController.verify();
     });
 
     it('should send query params with offset and not send any query param', (doneFn) => {
@@ -166,7 +165,33 @@ describe('ProductService', () => {
       const params = request.request.params;
       expect(params.get('limit')).toBeNull();
       expect(params.get('offset')).toBeNull();
-      httpController.verify();
+    });
+  });
+
+  describe('test for create', () => {
+    it('should return a new product', (doneFn) => {
+      // arrange
+      const mock = generateOneProduct();
+      const dto: CreateProductDTO = {
+        title: 'new test',
+        price: 200,
+        images: ['img'],
+        description: 'test',
+        categoryId: 1,
+      };
+      // act
+      productsService.create({ ...dto }).subscribe((response) => {
+        // assert
+        expect(response).toEqual(mock);
+        doneFn();
+      });
+
+      // http config
+      const url = `${environment.API_URL}/api/v1/products`;
+      const request = httpController.expectOne(url);
+      request.flush(mock);
+      expect(request.request.body).toEqual(dto);
+      expect(request.request.method).toEqual('POST');
     });
   });
 });
