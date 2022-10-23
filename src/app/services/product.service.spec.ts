@@ -16,11 +16,11 @@ import {
   Product,
   UpdateProductDTO,
 } from '../models/product.model';
-import { ProductsService } from './products.service';
+import { ProductService } from './product.service';
 import { TokenService } from './token.service';
 
 describe('ProductService', () => {
-  let productsService: ProductsService;
+  let productsService: ProductService;
   let tokenService: TokenService;
   let httpController: HttpTestingController;
 
@@ -28,7 +28,7 @@ describe('ProductService', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [
-        ProductsService,
+        ProductService,
         TokenService,
         {
           provide: HTTP_INTERCEPTORS,
@@ -37,7 +37,7 @@ describe('ProductService', () => {
         },
       ],
     });
-    productsService = TestBed.inject(ProductsService);
+    productsService = TestBed.inject(ProductService);
     tokenService = TestBed.inject(TokenService);
     httpController = TestBed.inject(HttpTestingController);
   });

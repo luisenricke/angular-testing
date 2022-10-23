@@ -18,7 +18,7 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class ProductsService {
+export class ProductService {
   private apiUrl = `${environment.API_URL}/api/v1/products`;
 
   constructor(private http: HttpClient) {}
