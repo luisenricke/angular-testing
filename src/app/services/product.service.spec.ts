@@ -9,7 +9,11 @@ import {
   generateManyProducts,
   generateOneProduct,
 } from '../models/product.mock';
-import { CreateProductDTO, Product } from '../models/product.model';
+import {
+  CreateProductDTO,
+  Product,
+  UpdateProductDTO,
+} from '../models/product.model';
 import { ProductsService } from './products.service';
 
 describe('ProductService', () => {
@@ -192,6 +196,52 @@ describe('ProductService', () => {
       request.flush(mock);
       expect(request.request.body).toEqual(dto);
       expect(request.request.method).toEqual('POST');
+    });
+  });
+
+  describe('test for update', () => {
+    it('should update product', (doneFn) => {
+      // arrange
+      const mock = generateOneProduct();
+      const dto: UpdateProductDTO = {
+        title: 'update test',
+      };
+      const productId = '1';
+
+      // act
+      productsService.update(productId, {...dto}).subscribe((response) => {
+        // assert
+        expect(response).toEqual(mock);
+        doneFn();
+      });
+
+      // http config
+      const url = `${environment.API_URL}/api/v1/products/${productId}`;
+      const request = httpController.expectOne(url);
+      request.flush(mock);
+      expect(request.request.body).toEqual(dto);
+      expect(request.request.method).toEqual('PUT');
+    });
+  });
+
+  describe('test for delete', () => {
+    it('should update product', (doneFn) => {
+      // arrange
+      const mock = true;
+      const productId = '1'
+
+      // act
+      productsService.delete(productId).subscribe((response) => {
+        // assert
+        expect(response).toEqual(mock);
+        doneFn();
+      });
+
+      // http config
+      const url = `${environment.API_URL}/api/v1/products/${productId}`;
+      const request = httpController.expectOne(url);
+      request.flush(mock);
+      expect(request.request.method).toEqual('DELETE');
     });
   });
 });
