@@ -1,6 +1,7 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Person } from 'src/app/models/person.model';
 
 import { PersonComponent } from './person.component';
 
@@ -24,19 +25,36 @@ describe('PersonComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have <p> with "Lorem ipsum"', () => {
+  it('should name be "Luis"', () => {
+    component.person = new Person('Luis', 'Villalobos', 27, 80, 1.71);
+    expect(component.person.name).toEqual('Luis');
+  });
+
+  it('should have <p> with "{person.height}"', () => {
+    // arrange
+    component.person = new Person('Alma', 'Sanchez', 25, 75, 1.61);
     const debugElement: DebugElement = fixture.debugElement;
     const debugQuery: DebugElement = debugElement.query(By.css('p'));
     const p: HTMLElement = debugQuery.nativeElement;
 
-    expect(p?.textContent).toContain('Lorem ipsum');
+    // act
+    fixture.detectChanges();
+
+    expect(p?.textContent).toContain(component.person.height);
   });
 
-  it('should have <h3> with "Lorem ipsum"', () => {
+  it('should have <h3> with "{person.name}"', () => {
+    // arrange
+    component.person = new Person('Joaquin', 'Cruz', 27, 78, 1.75);
+    const expectedMessage = `Hi, ${component.person.name}`;
     const debugElement: DebugElement = fixture.debugElement;
     const debugQuery: DebugElement = debugElement.query(By.css('h3'));
     const h3: HTMLElement = debugQuery.nativeElement;
 
-    expect(h3?.textContent).toEqual('Hi, PersonComponent');
+    // act
+    fixture.detectChanges();
+
+    // assert
+    expect(h3?.textContent).toEqual(expectedMessage);
   });
 });
