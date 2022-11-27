@@ -7,8 +7,21 @@ import { Person } from '../../models/person.model';
   styleUrls: ['./people.component.scss'],
 })
 export class PeopleComponent implements OnInit {
-  person: Person = new Person('Luis', 'Villalobos', 27, 80, 1.71);
-  constructor() {}
 
-  ngOnInit(): void {}
+  people: Person[] = [
+    new Person('Luis', 'Villalobos', 27, 95, 1.71),
+    new Person('Francisco', 'Chavez', 30, 80, 1.51),
+  ];
+  selectedPerson: Person | null = null;
+
+  constructor() {
+  }
+
+  ngOnInit(): void {
+  }
+
+  choose(person: Person) {
+    this.selectedPerson = person
+  }
+
 }
