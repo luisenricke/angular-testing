@@ -1,7 +1,7 @@
 <section class="container">
   <h3>Count: {{ people.length }}</h3>
   <h3>Selected Person</h3>
-  <div *ngIf="selectedPerson">
+  <div *ngIf="selectedPerson" class="selected-person">
     <ul>
       <li>Name: {{ selectedPerson.name }}</li>
       <li>Age: {{ selectedPerson.age }}</li>

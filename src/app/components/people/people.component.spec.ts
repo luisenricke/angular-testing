@@ -41,4 +41,32 @@ describe('PeopleComponent', () => {
     // assert
     expect(debugElement.length).toEqual(3);
   });
+
+  it('should raise selected event when clicked', () => {
+    // arrange
+    const buttonDebug = fixture.debugElement.query(By.css('app-person .btn-choose'));
+
+    // act
+    buttonDebug.triggerEventHandler('click', null);
+    fixture.detectChanges();
+
+    // assert
+    expect(component.selectedPerson).toEqual(component.people[0]);
+  });
+
+  it('should render selected event when clicked', () => {
+    // arrange
+    const buttonDebug = fixture.debugElement.query(By.css('app-person .btn-choose'));
+
+    // act
+    buttonDebug.triggerEventHandler('click', null);
+    fixture.detectChanges();
+    const liNameDebug = fixture.debugElement.query(By.css('.selected-person ul > li'));
+    const liAgeDebug = fixture.debugElement.query(By.css('.selected-person ul > li:nth-child(2)'));
+
+    // assert
+    expect(component.selectedPerson).toEqual(component.people[0]);
+    expect(liNameDebug.nativeElement.textContent).toContain(component.selectedPerson?.name);
+    expect(liAgeDebug.nativeElement.textContent).toContain(component.selectedPerson?.age);
+  });
 });
