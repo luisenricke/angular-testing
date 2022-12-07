@@ -5,14 +5,15 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { PeopleComponent } from './components/people/people.component';
+import { PersonComponent } from './components/person/person.component';
 import { PicoPreviewComponent } from './components/pico-preview/pico-preview.component';
+import { ProductComponent } from './components/product/product.component';
 import { ProductsComponent } from './components/products/products.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
-import { PersonComponent } from './components/person/person.component';
-import { PeopleComponent } from './components/people/people.component';
 
 @NgModule({
-  declarations: [AppComponent, ProductsComponent, PicoPreviewComponent, PersonComponent, PeopleComponent],
+  declarations: [AppComponent, ProductsComponent, PicoPreviewComponent, PersonComponent, PeopleComponent, ProductComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -28,4 +29,4 @@ import { PeopleComponent } from './components/people/people.component';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

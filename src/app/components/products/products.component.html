@@ -1,9 +1,6 @@
 <section class="container">
   <h1>Products component</h1>
   <div class="my-grid">
-    <figure *ngFor="let item of products">
-      <img [src]="item.images[0]" alt="" />
-      <figcaption>{{ item.title }} - {{ item.price }}</figcaption>
-    </figure>
+    <app-product *ngFor="let item of products" [product]="item"> </app-product>
   </div>
 </section>
