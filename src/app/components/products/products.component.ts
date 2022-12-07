@@ -25,10 +25,19 @@ export class ProductsComponent implements OnInit {
 
   getAllProducts(): void {
     this.status = 'loading';
-    this.productsService.getAll(this.limit, this.offset).subscribe((products) => {
-      this.products = [...this.products, ...products];
-      this.offset += this.limit;
-      this.status = 'success';
+    this.productsService.getAll(this.limit, this.offset).subscribe({
+      next: (products) => {
+        this.products = [...this.products, ...products];
+        this.offset += this.limit;
+        this.status = 'success';
+      },
+      error: error => {
+        setTimeout(() => {
+          this.products = [];
+          this.offset = 0;
+          this.status = 'error';
+        }, 3_000);
+      }
     });
   }
 }
