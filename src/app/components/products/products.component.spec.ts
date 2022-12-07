@@ -28,17 +28,31 @@ describe('ProductsComponent', () => {
     component = fixture.componentInstance;
     productService = TestBed.inject(ProductService) as jasmine.SpyObj<ProductService>;
 
+    const productsMock = generateManyProducts(3);
+    productService.getAll.and.returnValue(of(productsMock));
 
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(productService.getAll).toHaveBeenCalled();
   });
 
-  it('should call to service', () => {
-    const productsMock = generateManyProducts(3);
-    productService.getAll.and.returnValue(of(productsMock));
-    fixture.detectChanges();
-    expect(productService.getAll).toHaveBeenCalled();
-  })
+  describe('test for getAllProducts', () => {
+    it('should return product list from service', () => {
+      // arrange
+      const productsMock = generateManyProducts(10);
+      const previousProducts = [...component.products];
+      productService.getAll.and.returnValue(of(productsMock));
+
+      // act
+      component.getAllProducts();
+      fixture.detectChanges();
+
+      // assert
+      expect(component.products).toEqual([...previousProducts, ...productsMock]);
+    });
+  });
+
 });

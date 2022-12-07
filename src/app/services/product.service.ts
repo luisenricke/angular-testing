@@ -21,7 +21,7 @@ import { environment } from '../../environments/environment';
 export class ProductService {
   private apiUrl = `${environment.API_URL}/api/v1/products`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllSimple() {
     return this.http.get<Product[]>(this.apiUrl);
@@ -29,7 +29,7 @@ export class ProductService {
 
   getAll(limit?: number, offset?: number): Observable<Product[]> {
     let params = new HttpParams();
-    if (limit && offset) {
+    if (limit !== undefined && offset !== undefined) {
       params = params.set('limit', limit);
       params = params.set('offset', offset);
     }
