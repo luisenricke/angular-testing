@@ -13,6 +13,7 @@ import { ProductComponent } from './components/product/product.component';
 import { ProductsComponent } from './components/products/products.component';
 import { HighlightDirective } from './directives/highlight.directive';
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { ReversePipe } from './pipes/reverse.pipe';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     PicoPreviewComponent,
     ProductComponent,
     ProductsComponent,
-    HighlightDirective
+    HighlightDirective,
+    ReversePipe
   ],
   imports: [
     BrowserModule,
