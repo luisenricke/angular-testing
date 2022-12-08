@@ -1,4 +1,5 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { async, defer, of } from 'rxjs';
 
 import { generateManyProducts } from '../../models/product.mock';
@@ -105,5 +106,23 @@ describe('ProductsComponent', () => {
       expect(component.rta).toEqual(mockMessage);
       expect(valueService.getPromiseValue).toHaveBeenCalled();
     });
+
+    it('should show "mocking string" in <p> when button was clicked', fakeAsync(() => {
+      // arrange
+      const mockMessage = 'mocking string';
+      valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMessage));
+      const buttonDebug = fixture.debugElement.query(By.css('.btn-promise'));
+
+      // act
+      buttonDebug.triggerEventHandler('click', null);
+      tick();
+      fixture.detectChanges();
+      const pDebug = fixture.debugElement.query(By.css('p.rta'));
+
+      // assert
+      expect(component.rta).toEqual(mockMessage);
+      expect(valueService.getPromiseValue).toHaveBeenCalled();
+      expect(pDebug.nativeElement.textContent).toEqual(mockMessage);
+    }));
   });
 });
