@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { HighlightDirective } from './highlight.directive';
@@ -10,9 +11,12 @@ import { HighlightDirective } from './highlight.directive';
     <p highlight="red">Static color</p>
     <p highlight="yellow">Other static color</p>
     <p>No highlight</p>
+    <input [(ngModel)]="color" [highlight]="color" />
   `,
 })
-class HostComponent { }
+class HostComponent {
+  color = 'orange';
+}
 
 describe('HighlightDirective', () => {
   let component: HostComponent;
@@ -21,6 +25,7 @@ describe('HighlightDirective', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [HostComponent, HighlightDirective],
+      imports: [FormsModule]
     }).compileComponents();
   });
 
@@ -36,9 +41,9 @@ describe('HighlightDirective', () => {
 
   it('should have three highlight elements', () => {
     const elements = fixture.debugElement.queryAll(By.directive(HighlightDirective));
-    const elementsWithout = fixture.debugElement.queryAll(By.css('*:not([highlight])'));
-    expect(elements.length).toEqual(3);
-    expect(elementsWithout.length).toEqual(1);
+    const elementsWithout = fixture.debugElement.queryAll(By.css('*:not([highlight])')); // TODO fix selector to wrap the input
+    expect(elements.length).toEqual(4);
+    expect(elementsWithout.length).toEqual(2);
   });
 
   it('should the elements be match with backgroundColor', () => {
@@ -52,6 +57,19 @@ describe('HighlightDirective', () => {
     const element = fixture.debugElement.query(By.css('.first'));
     const directive = element.injector.get(HighlightDirective);
     expect(element.nativeElement.style.backgroundColor).toEqual(directive.defaultColor);
+  });
+
+  it('should bind <input> and change the backgroundColor', () => {
+    const element = fixture.debugElement.query(By.css('input'));
+    const input: HTMLInputElement = element.nativeElement;
+
+    expect(input.style.backgroundColor).toEqual('orange');
+    input.value = 'green';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    expect(input.style.backgroundColor).toEqual('green');
+    expect(component.color).toEqual('green');
   });
 
 });
