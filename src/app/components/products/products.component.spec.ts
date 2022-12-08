@@ -1,8 +1,9 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { defer, of } from 'rxjs';
+import { async, defer, of } from 'rxjs';
 
 import { generateManyProducts } from '../../models/product.mock';
 import { ProductService } from '../../services/product.service';
+import { ValueService } from '../../services/value.service';
 import { ProductComponent } from '../product/product.component';
 import { ProductsComponent } from './products.component';
 
@@ -10,14 +11,17 @@ describe('ProductsComponent', () => {
   let component: ProductsComponent;
   let fixture: ComponentFixture<ProductsComponent>;
   let productService: jasmine.SpyObj<ProductService>;
+  let valueService: jasmine.SpyObj<ValueService>;
 
   beforeEach(async () => {
-    const productServiceSpy = jasmine.createSpyObj('ValueService', ['getAll']);
+    const productServiceSpy = jasmine.createSpyObj('ProductService', ['getAll']);
+    const valueServiceSpy = jasmine.createSpyObj('ValueService', ['getPromiseValue']);
 
     await TestBed.configureTestingModule({
       declarations: [ProductsComponent, ProductComponent],
       providers: [
         { provide: ProductService, useValue: productServiceSpy },
+        { provide: ValueService, useValue: valueServiceSpy },
       ]
     })
       .compileComponents();
@@ -27,6 +31,7 @@ describe('ProductsComponent', () => {
     fixture = TestBed.createComponent(ProductsComponent);
     component = fixture.componentInstance;
     productService = TestBed.inject(ProductService) as jasmine.SpyObj<ProductService>;
+    valueService = TestBed.inject(ValueService) as jasmine.SpyObj<ValueService>;
 
     const productsMock = generateManyProducts(3);
     productService.getAll.and.returnValue(of(productsMock));
@@ -86,4 +91,19 @@ describe('ProductsComponent', () => {
     }));
   });
 
+  describe('test for callPromise', () => {
+    it('should call to promise', async () => {
+      // arrange
+      const mockMessage = 'mocking string';
+      valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMessage));
+
+      // act
+      await component.callPromise();
+      fixture.detectChanges();
+
+      // assert
+      expect(component.rta).toEqual(mockMessage);
+      expect(valueService.getPromiseValue).toHaveBeenCalled();
+    });
+  });
 });
